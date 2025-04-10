@@ -16,6 +16,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "8080"));
+});
+
 // Adicionar configuração CORS mais permissiva para ambiente de desenvolvimento
 if (builder.Environment.IsDevelopment())
 {

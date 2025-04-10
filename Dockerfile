@@ -14,4 +14,7 @@ WORKDIR /app
 
 COPY --from=build-env /app/out .
 
+ENV ASPNETCORE_URLS=http://+:8080
+ENV PORT=8080
+
 ENTRYPOINT ["dotnet", "CashFlow.Api.dll"]
