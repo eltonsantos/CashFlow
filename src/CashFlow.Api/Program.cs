@@ -16,6 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Descomentar esta configuração para o Google Cloud Run
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "8080"));
@@ -45,7 +46,10 @@ else
                     "http://localhost:3000",
                     "https://localhost:3000",
                     "http://localhost:5291",
-                    "https://localhost:7133"
+                    "https://localhost:7133",
+                    // Adicionar os domínios do Google Cloud Run
+                    "https://*.run.app",
+                    "https://estudo-gcp-primeit.web.app"
                 )
                 .AllowAnyMethod()
                 .AllowAnyHeader();

@@ -4,7 +4,19 @@ import api from './api';
 export const expenseService = {
   async getAllExpenses(): Promise<ExpensesResponse> {
     const response = await api.get<ExpensesResponse>('/Expenses');
-    return response.data;
+    console.log('Dados brutos da API:', response.data);
+    
+    // Garantir que as datas estejam presentes e corretamente formatadas
+    const processedResponse = {
+      expenses: response.data.expenses.map(expense => ({
+        ...expense,
+        // Se a data existir, usar como está, caso contrário definir para hoje
+        date: expense.date || new Date().toISOString().split('T')[0]
+      }))
+    };
+    
+    console.log('Dados processados:', processedResponse);
+    return processedResponse;
   },
 
   async getExpenseById(id: number): Promise<Expense> {

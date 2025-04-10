@@ -4,8 +4,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { authService } from '@/services/auth';
-import { AuthResponse, LoginRequest, RegisterUserRequest, UserProfile } from '@/types';
+import { AuthResponse, LoginRequest, RegisterUserRequest, UserProfile, ErrorResponse } from '@/types';
 import { setCookie, deleteCookie } from '@/utils/cookies';
+import { AxiosError } from 'axios';
 
 interface AuthContextData {
   user: UserProfile | null;
@@ -53,8 +54,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       handleAuthSuccess(response);
       toast.success('Login realizado com sucesso!');
       router.push('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.errorMessages?.[0] || 'Falha ao fazer login';
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage = axiosError.response?.data?.errorMessages?.[0] || 'Falha ao fazer login';
       toast.error(errorMessage);
       throw error;
     } finally {
@@ -69,8 +71,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       handleAuthSuccess(response);
       toast.success('Registro realizado com sucesso!');
       router.push('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.errorMessages?.[0] || 'Falha ao registrar usuário';
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage = axiosError.response?.data?.errorMessages?.[0] || 'Falha ao registrar usuário';
       toast.error(errorMessage);
       throw error;
     } finally {

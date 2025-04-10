@@ -66,8 +66,27 @@ export default function DashboardPage() {
 
   // Formatar data
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
+    try {
+      if (!dateString) return '';
+      
+      // Verificar se a data está no formato ISO (2023-05-15T00:00:00)
+      if (dateString.includes('T')) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+      }
+      
+      // Se não estiver no formato ISO, tentar dividir por traços (2023-05-15)
+      const parts = dateString.split('-');
+      if (parts.length === 3) {
+        const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        return date.toLocaleDateString('pt-BR');
+      }
+      
+      return dateString;
+    } catch (error) {
+      console.error('Erro ao formatar data:', error);
+      return dateString;
+    }
   };
 
   return (
